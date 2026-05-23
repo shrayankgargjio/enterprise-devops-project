@@ -5,7 +5,7 @@ pipeline {
 
         stage('Clone Code') {
             steps {
-                git 'https://github.com/shrayankgargjio/enterprise-devops-project.git'
+                git branch: 'main', url: 'https://github.com/shrayankgargjio/enterprise-devops-project.git'
             }
         }
 
@@ -16,5 +16,6 @@ ssh -i C:\\sshkey\\SG_learn.pem -o StrictHostKeyChecking=no ubuntu@32.197.237.81
 '''
             }
         }
+
     }
 }
