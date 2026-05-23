@@ -12,7 +12,7 @@ pipeline {
         stage('Deploy To EC2') {
             steps {
                 bat '''
-ssh -i C:\\sshkey\\SG_learn.pem -o StrictHostKeyChecking=no ubuntu@32.197.237.81 "cd ~/enterprise-devops-project && git pull origin main && sudo docker compose down || true && sudo docker compose up -d --build
+ssh -i C:\\sshkey\\SG_learn.pem -o StrictHostKeyChecking=no ubuntu@32.197.237.81 "cd ~/enterprise-devops-project && git pull origin main && sudo docker compose down || true && sudo docker compose up -d --build"
 '''
             }
         }
