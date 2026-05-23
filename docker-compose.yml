@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+  enterprise-app:
+    build: .
+    container_name: enterprise-container
+
+    ports:
+      - "8082:80"
+
+    restart: always
