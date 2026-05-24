@@ -21,6 +21,12 @@ pipeline {
             }
         }
 
+	stage('Docker Login') {
+    steps {
+        bat 'docker login -u learnshrayank'
+            }
+       }
+
         stage('Push Docker Image') {
             steps {
                 bat 'docker push learnshrayank/enterprise-devops-app:latest'
