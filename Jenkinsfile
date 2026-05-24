@@ -22,10 +22,17 @@ pipeline {
         }
 
         stage('Deploy To Kubernetes') {
-            steps {
-                bat 'kubectl rollout restart deployment industry-app'
-            }
-        }
+    steps {
+        bat '''
+        set KUBECONFIG=C:\\Users\\DELL\\.kube\\config
+        kubectl config current-context
+        kubectl cluster-info
+        kubectl get nodes
+        kubectl rollout restart deployment industry-app
+        kubectl get pods
+        '''
+           }
+       }
 
         stage('Check Pods') {
             steps {
