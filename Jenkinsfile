@@ -21,6 +21,14 @@ pipeline {
             }
         }
 
+	stage('Push Docker Image') {
+    steps {
+        bat '''
+        docker push learnshrayank/enterprise-devops-app:latest
+        '''
+         }
+       }
+
         stage('Deploy To Kubernetes') {
     steps {
         bat '''
