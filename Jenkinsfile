@@ -31,8 +31,8 @@ pipeline {
         kubectl rollout restart deployment industry-app
         kubectl get pods
         '''
-           }
-       }
+           }    
+        }    
 
         stage('Check Pods') {
             steps {
