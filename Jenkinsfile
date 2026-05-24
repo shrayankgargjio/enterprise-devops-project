@@ -19,6 +19,7 @@ pipeline {
             steps {
                 bat 'docker tag enterprise-devops-app:latest learnshrayank/enterprise-devops-app:latest'
             }
+        }
 
         stage('Deploy To Kubernetes') {
             steps {
@@ -34,4 +35,3 @@ pipeline {
 
     }
 }
-
