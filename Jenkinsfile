@@ -23,9 +23,9 @@ pipeline {
 
 	stage('Docker Login') {
     steps {
-        bat 'docker login -u learnshrayank'
+        bat 'echo YOUR_TOKEN_HERE | docker login -u learnshrayank --password-stdin'
             }
-       }
+        }
 
         stage('Push Docker Image') {
             steps {
