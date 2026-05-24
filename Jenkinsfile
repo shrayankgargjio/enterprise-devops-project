@@ -21,15 +21,14 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
-            steps {
-                bat 'docker push learnshrayank/enterprise-devops-app:latest'
-            }
-        }
-
         stage('Deploy To Kubernetes') {
             steps {
                 bat 'kubectl rollout restart deployment industry-app'
+        }
+
+        stage('Check Pods') {
+            steps {
+                bat 'kubectl get pods'
             }
         }
 
