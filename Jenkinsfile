@@ -24,12 +24,23 @@ pipeline {
         stage('Deploy To Kubernetes') {
     steps {
         bat '''
+        echo USERPROFILE=%USERPROFILE%
+        echo HOMEDRIVE=%HOMEDRIVE%
+        echo HOMEPATH=%HOMEPATH%
+        echo KUBECONFIG=%KUBECONFIG%
+
+        where kubectl
+        kubectl version --client
+
+        kubectl config view
+        kubectl config current-context
+
+        kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config config view
+        kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config config current-context
         kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config get nodes
-        kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config rollout restart deployment industry-app
-        kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config get pods
         '''
-           }
-        }    
+            }  
+        }   
 
         stage('Check Pods') {
             steps {
