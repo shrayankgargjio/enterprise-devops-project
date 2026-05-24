@@ -19,11 +19,11 @@ pipeline {
             steps {
                 bat 'docker tag enterprise-devops-app:latest learnshrayank/enterprise-devops-app:latest'
             }
-        }
 
         stage('Deploy To Kubernetes') {
             steps {
                 bat 'kubectl rollout restart deployment industry-app'
+            }
         }
 
         stage('Check Pods') {
@@ -34,3 +34,4 @@ pipeline {
 
     }
 }
+
