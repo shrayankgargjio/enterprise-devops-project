@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE = 'learnshrayank/enterprise-devops-app:latest'
+        KUBECONFIG_PATH = 'C:\\Users\\DELL\\.kube\\config'
+    }
+
     stages {
 
         stage('Clone Code') {
@@ -11,13 +16,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t enterprise-devops-app .'
+                bat 'docker build --no-cache -t enterprise-devops-app .'
             }
         }
 
         stage('Tag Docker Image') {
             steps {
-                bat 'docker tag enterprise-devops-app:latest learnshrayank/enterprise-devops-app:latest'
+                bat 'docker tag enterprise-devops-app:latest %DOCKER_IMAGE%'
             }
         }
 
@@ -29,23 +34,25 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     bat '''
+                    docker logout
                     echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
                     '''
                 }
             }
         }
+
         stage('Push Docker Image') {
             steps {
-                bat 'docker push learnshrayank/enterprise-devops-app:latest'
+                bat 'docker push %DOCKER_IMAGE%'
             }
         }
 
         stage('Deploy To Kubernetes') {
             steps {
                 bat '''
-                kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config get nodes
-                kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config rollout restart deployment industry-app
-                kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config rollout status deployment industry-app
+                kubectl --kubeconfig=%KUBECONFIG_PATH% get nodes
+                kubectl --kubeconfig=%KUBECONFIG_PATH% set image deployment/industry-app industry-app=%DOCKER_IMAGE%
+                kubectl --kubeconfig=%KUBECONFIG_PATH% rollout status deployment/industry-app
                 '''
             }
         }
@@ -53,7 +60,8 @@ pipeline {
         stage('Check Pods') {
             steps {
                 bat '''
-                kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config get pods
+                kubectl --kubeconfig=%KUBECONFIG_PATH% get pods
+                kubectl --kubeconfig=%KUBECONFIG_PATH% get svc
                 '''
             }
         }
