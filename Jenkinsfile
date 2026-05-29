@@ -7,7 +7,6 @@ pipeline {
     }
 
     stages {
-
         stage('Clone Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/shrayankgargjio/enterprise-devops-project.git'
@@ -15,13 +14,13 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            steps {
+                bat 'docker build --no-cache -t enterprise-devops-app .'
             }
         }
 
         stage('Tag Docker Image') {
             steps {
-                bat 'docker tag enterprise-devops-app:latest %DOCKER_IMAGE%'
+                bat 'docker tag enterprise-devops-app:latest learnshrayank/enterprise-devops-app:latest'
             }
         }
 
@@ -32,25 +31,23 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    powershell '''
-                    $env:DOCKER_PASS | docker login -u $env:DOCKER_USER --password-stdin
-                    '''
+                    bat 'powershell -Command "$env:DOCKER_PASS | docker login -u $env:DOCKER_USER --password-stdin"'
                 }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                bat 'docker push %DOCKER_IMAGE%'
+                bat 'docker push learnshrayank/enterprise-devops-app:latest'
             }
         }
 
         stage('Deploy To Kubernetes') {
             steps {
                 bat '''
-                kubectl --kubeconfig=%KUBECONFIG_PATH% get nodes
-                kubectl --kubeconfig=%KUBECONFIG_PATH% set image deployment/industry-app industry-app=%DOCKER_IMAGE%
-                kubectl --kubeconfig=%KUBECONFIG_PATH% rollout status deployment/industry-app
+                kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config get nodes
+                kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config set image deployment/industry-app industry-app=learnshrayank/enterprise-devops-app:latest
+                kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config rollout status deployment/industry-app
                 '''
             }
         }
@@ -58,8 +55,8 @@ pipeline {
         stage('Check Pods') {
             steps {
                 bat '''
-                kubectl --kubeconfig=%KUBECONFIG_PATH% get pods
-                kubectl --kubeconfig=%KUBECONFIG_PATH% get svc
+                kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config get pods
+                kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config get svc
                 '''
             }
         }
