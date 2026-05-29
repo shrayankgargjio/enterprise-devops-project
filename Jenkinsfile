@@ -14,6 +14,7 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            steps {
                 bat 'docker build --no-cache -t enterprise-devops-app .'
             }
         }
