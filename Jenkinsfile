@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'learnshrayank/enterprise-devops-app:latest'
+        DOCKER_IMAGE = 'learnshrayank/enterprise-devops-app:${BUILD_NUMBER}'
         KUBECONFIG_PATH = 'C:\\Users\\DELL\\.kube\\config'
     }
 
@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build --no-cache -t enterprise-devops-app .'
+                bat 'docker build --no-cache -t %DOCKER_IMAGE% .'
             }
         }
 
@@ -39,7 +39,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                bat 'docker push learnshrayank/enterprise-devops-app:latest'
+                bat 'docker push %DOCKER_IMAGE%'
             }
         }
 
@@ -47,7 +47,7 @@ pipeline {
             steps {
                 bat '''
                 kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config get nodes
-                kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config set image deployment/industry-app industry-app=learnshrayank/enterprise-devops-app:latest
+                kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config set image deployment/industry-app industry-app=%DOCKER_IMAGE%
                 kubectl --kubeconfig=C:\\Users\\DELL\\.kube\\config rollout status deployment/industry-app
                 '''
             }
